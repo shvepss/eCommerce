@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.c360.dao.C360Dao">
+<!-- <cache-ref namespace="com.c360.dao.C360Dao"/>  -->
+
+   
+	<!-- <select id="rptV9GetInteractionHistoryByEmail" useCache="true"  resultType="com.c360.bean.InteractionHistory" parameterType="java.util.HashMap" timeout="60">
+	<![CDATA[ 
+		select 
+	  		t.TACTICCODE as tacticCode, CAST(t.EMAILSENTDATE as DATE) as emailSentDate, t.EMAIL as email, t.RESPONSEDESC as responseDesc, 
+	  		CAST (t.CREATEDATE AS DATE) as createDate, t.URL as url, t.URLDISPLAYNAME as urlDisplayName, t.TACTICNAME as tacticName
+	  	from (
+	  		select 
+	  			TACTICCODE, EMAILSENTDATE, EMAIL, RESPONSEDESC, CREATEDATE, URL, URLDISPLAYNAME, TACTICNAME, 
+	  			ROW_NUMBER() OVER (
+	  				PARTITION BY TACTICCODE, EMAILSENTDATE, EMAIL, RESPONSEDESC, CREATEDATE, URL, URLDISPLAYNAME, TACTICNAME order by CREATEDATE
+	  			) RN 
+	  		from  MATIWR.MCV_INTERACTIONHISTORY where 
+	  			EMAIL = #{email} 
+	  		]]>	
+	  	<choose>  
+              <when test="pastMonths != null and pastMonths!=''">  
+             <![CDATA[ 
+               AND CREATEDATE >= CURRENT_DATE - ${pastMonths} MONTHS
+               ]]>
+        </when> 
+        <otherwise>  
+              <![CDATA[ 
+               AND CREATEDATE >= CURRENT_DATE - 3 MONTHS
+               ]]>
+        </otherwise>   
+      </choose>		
+	<![CDATA[ 
+	  	) t where t.RN = 1
+	  	FOR READ ONLY WITH UR
+	]]>
+	</select> -->
+
+   <select id="rptV9GetSimulationData" resultType="com.c360.bean.SearchBean" parameterType="java.lang.String" timeout="60">
+   <![CDATA[ 
+			SELECT distinct EMAIL AS email, count(email) c, RAND() as r
+			  FROM  MATIWR.MCV_INTERACTIONHISTORY group by email HAVING count(email)>3
+			  ORDER BY r FETCH FIRST 40 ROWS ONLY  WITH UR FOR READ ONLY
+       ]]>
+   </select>
+   
+</mapper>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE taglib
+        PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
+        "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
+<taglib>
+	<tlib-version>1.0</tlib-version>
+	<jsp-version>1.2</jsp-version>
+	<short-name>HTML tag library</short-name>
+	<description>HTML tag library for ibm.com standards</description>
+
+	<!--html tag -->
+	<tag>
+		<name>html</name>
+		<tag-class>com.ibm.market.common.base.taglib.html.HtmlTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>html element</description>
+		<attribute>
+			<!-- if not specified, retrieves language from request locale -->
+			<name>lang</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	
+	<!--head tag -->
+	<tag>
+		<name>head</name>
+		<tag-class>com.ibm.market.common.base.taglib.html.HeadTag</tag-class>
+		<body-content>JSP</body-content>
+		<description>head element</description>
+		
+		<attribute>
+			<name>title</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>description</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>oneColumn</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>additionalJS</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	
+	<!--updateDate tag -->
+	<tag>
+		<name>updatedDate</name>
+		<tag-class>com.ibm.market.common.base.taglib.html.UpdatedDateTag</tag-class>
+		<body-content>empty</body-content>
+		<description>updatedDate</description>
+	</tag>
+	
+	<!--masthead tag -->
+	<tag>
+		<name>masthead</name>
+		<tag-class>com.ibm.market.common.base.taglib.html.MastHeadTag</tag-class>
+		<body-content>empty</body-content>
+		<description>masthead</description>
+	</tag>
+	
+	<!--footer tag -->
+	<tag>
+		<name>footer</name>
+		<tag-class>com.ibm.market.common.base.taglib.html.FooterTag</tag-class>
+		<body-content>empty</body-content>
+		<description>footer</description>
+	</tag>
+	
+	
+	<!--left navigator tag -->
+	<tag>
+		<name>leftNav</name>
+		<tag-class>com.ibm.market.common.base.taglib.html.LeftNavTag</tag-class>
+		<body-content>empty</body-content>
+		<description>leftNav</description>
+		<attribute>
+			<name>url</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>activeID</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	
+	
+</taglib>

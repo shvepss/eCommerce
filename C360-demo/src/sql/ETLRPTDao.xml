@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.c360.dao.C360Dao">
+<!-- <cache-ref namespace="com.c360.dao.C360Dao"/> -->
+
+	<!-- <select id="rptV9GetInteractionHistoryByEmail" useCache="true"  resultType="com.c360.bean.InteractionHistory" parameterType="java.util.HashMap" timeout="60">
+		<![CDATA[ 
+			select 
+		  		t.TACTICCODE as tacticCode, CAST(t.EMAILSENTDATE as DATE) as emailSentDate, t.EMAIL as email, t.RESPONSEDESC as responseDesc, 
+		  		CAST (t.CREATEDATE AS DATE) as createDate, t.URL as offerUrl, t.URLDISPLAYNAME as urlDisplayName, t.TACTICNAME as tacticName
+		  	from (
+		  		select 
+		  			TACTICCODE, EMAILSENTDATE, EMAIL, RESPONSEDESC, CREATEDATE, URL, URLDISPLAYNAME, TACTICNAME, 
+		  			ROW_NUMBER() OVER (
+		  				PARTITION BY TACTICCODE, EMAILSENTDATE, EMAIL, RESPONSEDESC, CREATEDATE, URL, URLDISPLAYNAME, TACTICNAME order by CREATEDATE
+		  			) RN 
+		  		from  MKTODS.MCV_INTERACTIONHISTORY where 
+		  			EMAIL = #{email} 
+		  		]]>	
+		  	<choose>  
+	              <when test="pastMonths != null and pastMonths!=''">  
+	             <![CDATA[ 
+	               AND CREATEDATE >= CURRENT_DATE - ${pastMonths} MONTHS
+	               ]]>
+	        </when> 
+	        <otherwise>  
+	              <![CDATA[ 
+	               AND CREATEDATE >= CURRENT_DATE - 3 MONTHS
+	               ]]>
+	        </otherwise>   
+	      </choose>		
+		<![CDATA[ 
+		  	) t where t.RN = 1
+		  	FOR READ ONLY WITH UR
+		]]>
+	</select>  -->
+
+   <select id="rptV9GetSimulationData" resultType="com.c360.bean.SearchBean" parameterType="java.lang.String" timeout="60">
+  	 <![CDATA[ 
+			  SELECT env.EMAIL AS email
+			  FROM MKTODS.MCV_INTERACTIONHISTORY env
+			  FETCH FIRST 100 ROWS ONLY  WITH UR FOR READ ONLY
+
+       ]]>
+   </select>
+
+<!-- 	<select id="etlRptGetActivePipelineQuote" resultType="com.c360.bean.QuoteBean" parameterType="java.lang.String" timeout="40000" flushCache="false" useCache="true">
+	   <![CDATA[ 
+       		select opp_num as oppNum,
+				quote_id as quoteId,
+				seller as seller,
+				date as quoteDate,
+				url as url
+			from C360.DMT_OPPTY_QUOTE_XREF
+				where opp_num = #{oppName}
+				order by date desc
+			fetch first 5 rows only WITH UR FOR READ ONLY
+		]]>
+	</select>
+	
+	<select id="rptGetInteractionHistoryMarketingByEmail" resultType="com.c360.bean.InteractionHistoryMarketing" useCache="true"  parameterType="java.util.HashMap"  timeout="60">
+   	<![CDATA[
+   		select REF_URL as refererUrl
+   		from C360.DMT_LINKS_REF_URL_ODS
+   			where INDIVIDUAL_KEY = #{individualKey}
+   			and URL_VALID = 'Y' 
+			and REF_URL not like '%url-in-process%'
+		]]>
+		<choose>  
+        	<when test="pastMonths != null and pastMonths!=''">  
+             <![CDATA[ 
+               and MARKETING_INTERACTION_DATE_KEY > INT(REPLACE(trim(char(current_date - ${pastMonths} MONTHS)),'-',''))
+               ]]>
+        </when> 
+        <otherwise>  
+           <![CDATA[ 
+            and MARKETING_INTERACTION_DATE_KEY > INT(REPLACE(trim(char(current_date - 3 MONTHS)),'-',''))
+            ]]>
+        </otherwise>   
+      </choose>		
+      <![CDATA[ 
+			WITH UR FOR READ ONLY
+   		]]>
+	</select>
+
+  	<select id="rptGetInteractionHistory" resultType="com.c360.bean.InteractionHistory" useCache="true"  parameterType="java.util.HashMap"  timeout="60000">
+   	<![CDATA[		
+		select
+			CREATEDATE as createDate, 
+			TACTIC_Name as tacticName, 
+			TACTIC_CD as tacticCode, 
+			RESPONSE_TYPE_DESC as responseDesc,
+    		OFFER_NAME as offerName, 
+    		ASSET_URL as offerUrl, 
+    		URLDISPLAYNAME as urlDisplayName,
+    		OFFER_TYPE_DESC as offerTypeDescription, 
+    		OFFER_ABSTRACT as offerAbstract, 
+    		CNTRY_CD as countryCode, 
+    		CNTRY_NAME as countryName, 
+    		MASTER_PROGRAM as masterProgram, 
+    		LDR_NAME as assignedTo, 
+    		CAMPN_NAME as segment, 
+    		BUYER_JOURNEY_DESC as status,
+     		OFFER_VSN_ID as offerVersionId, 
+     		ACCEPTED_OFFER_ID as acceptedOfferId,
+     		CAST(EMAILSENTDATE as DATE) as emailSentDate,
+     		URL_VALID as urlValid
+     	from C360.DMT_LINKS_ASSET_URL_MPW 
+     		where CI_CONT_ID = #{scId}
+		]]>
+	   <choose>  
+        <when test="pastMonths != null and pastMonths!=''">  
+             <![CDATA[ 
+               and DATE(CREATEDATE) >= add_months(current_date, -${pastMonths})
+               ]]>
+        </when> 
+        <otherwise>  
+           <![CDATA[ 
+            and DATE(CREATEDATE) >= add_months(current_date, -3)
+            ]]>
+        </otherwise>   
+      </choose>		
+		<![CDATA[ 
+		order by CREATEDATE
+		WITH UR FOR READ ONLY
+		 ]]>
+   	
+	</select>  
+   
+	<select id="rptGetInteractionHistoryByEmail" resultType="com.c360.bean.InteractionHistory" useCache="true"  parameterType="java.util.HashMap"  timeout="60000">
+   	<![CDATA[
+   		select
+			CREATEDATE as createDate, 
+			TACTIC_Name as tacticName, 
+			TACTIC_CD as tacticCode, 
+			RESPONSE_TYPE_DESC as responseDesc,
+    		OFFER_NAME as offerName, 
+    		ASSET_URL as offerUrl, 
+    		URLDISPLAYNAME as urlDisplayName,
+    		OFFER_TYPE_DESC as offerTypeDescription, 
+    		OFFER_ABSTRACT as offerAbstract, 
+    		CNTRY_CD as countryCode, 
+    		CNTRY_NAME as countryName, 
+    		MASTER_PROGRAM as masterProgram, 
+    		LDR_NAME as assignedTo, 
+    		CAMPN_NAME as segment, 
+    		BUYER_JOURNEY_DESC as status,
+     		OFFER_VSN_ID as offerVersionId, 
+     		ACCEPTED_OFFER_ID as acceptedOfferId,
+     		CAST(EMAILSENTDATE as DATE) as emailSentDate,
+     		URL_VALID as urlValid
+     	from C360.DMT_LINKS_ASSET_URL_MPW 
+     		where EMAIL_ADR = #{email}
+		]]>
+	   <choose>  
+        <when test="pastMonths != null and pastMonths!=''">  
+             <![CDATA[ 
+               and DATE(CREATEDATE) >= add_months(current_date, -${pastMonths})
+               ]]>
+        </when> 
+        <otherwise>  
+           <![CDATA[ 
+            and DATE(CREATEDATE) >= add_months(current_date, -3)
+            ]]>
+        </otherwise>   
+      </choose>		
+		<![CDATA[ 
+		order by CREATEDATE
+		WITH UR FOR READ ONLY
+		 ]]>
+	</select> -->
+	
+</mapper>  
