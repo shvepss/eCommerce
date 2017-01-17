@@ -33,7 +33,9 @@
 	<bean id="authService" class="com.c360.service.impl.AuthServiceImpl" />
   
 	
-  	<bean id="c360Dao" class="com.c360.dao.impl.C360DaoImpl"/>
+  	<bean id="c360Dao" class="com.c360.dao.impl.C360DaoImpl">
+       <property name="sqlSessionEtlRpt" ref="sqlSessionEtlRpt" />  
+    </bean>
        
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage" value="com.c360.dao" />
